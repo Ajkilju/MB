@@ -1,0 +1,36 @@
+﻿@using mB.Consumer.Models;
+
+@model ProductsTableViewModel
+
+@{
+    if (Model.Fail)
+    {
+        <p>@Model.Error</p>
+    }
+    else if (!Model.Products.Any())
+    {
+        <p>Załaduj pliki uzywając mB.Loader'a</p>
+    }
+    else
+    {
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Added</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(var product in Model.Products)
+                {
+                    <tr>
+                        <th>@product.Name</th>
+                        <th>@product.Category</th>
+                        <th>@product.Added.ToString("yyyy-MM-dd")</th>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }   
+}

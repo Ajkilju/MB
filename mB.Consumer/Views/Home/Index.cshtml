@@ -1,0 +1,27 @@
+﻿@{
+    ViewData["Title"] = "Products";
+}
+
+<div id="productsTable"></div>
+
+<div id="message"></div>
+
+@section Scripts {
+    <script type="text/javascript">
+        function loadProductsTable() {
+            $.ajax({
+                url: '/products',
+                tyle: 'GET',
+                async: true,
+                success: function (res) {
+                    $('#productsTable').html(res);
+                },
+                error: function (res) {
+                    $('#message').text(res.responseText);
+                }
+            });
+        }
+
+        loadProductsTable();
+    </script>
+}
