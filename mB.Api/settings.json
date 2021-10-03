@@ -1,0 +1,8 @@
+{
+  "Paths": {
+    "LoaderSource": "../_SOURCE"
+  },
+  "ConnectionStrings": {
+    "Default": "Data Source=../mB.Db/mB.db"
+  }
+}

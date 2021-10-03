@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+ <Product>
+   <Id>1</Id>
+   <Name>Młotek</Name>
+   <Category>Narzędzia</Category>
+   <Price>10.99</Price>
+ </Product>
+

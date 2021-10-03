@@ -1,8 +1,12 @@
-﻿using mB.Api.Model;
-using mB.Api.Services;
+﻿using mB.Api.Features.Products.Commands.LoadProducts;
+using mB.Api.Features.Products.Commands.UpdateProduct;
+using mB.Api.Features.Products.Queries.GetProducts;
+using mB.Api.Features.Shared.Models;
 using mB.Utils;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,30 +18,70 @@ namespace mB.Api.Controllers
     [Route("products")]
     public class ProductsController : ControllerBase
     {
-        private readonly ProductService service;
-        private readonly ILogger logger;
+        private readonly IMediator mediator;
+        private readonly ILogger<ProductsController> logger;
 
-        public ProductsController(ProductService service, ILogger logger)
+        public ProductsController(
+            IMediator mediator,
+            ILogger<ProductsController> logger)
         {
-            this.service = service;
+            this.mediator = mediator;
             this.logger = logger;
         }
 
         [HttpGet(Name = "GetAllProducts")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<List<ProductDto>>> GetAllProducts()
+        public async Task<ActionResult<GetProductsQueryResponse>> GetAllProducts()
         {
             try
             {
-                var data = await service.GetAll();
+                var query = new GetProductsQuery();
 
-                return Ok(data);
+                var res = await mediator.Send(query);
+
+                return Ok(res);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                logger.Error(e);
+                logger.LogError(e, nameof(GetAllProducts));
 
-                return BadRequest();
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPost("load", Name = "LoadProducts")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<LoadProductsCommandResponse>> LoadProducts(LoadProductsCommand request)
+        {
+            try
+            {
+                var res = await mediator.Send(request);
+
+                return Ok(res);
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e, nameof(LoadProducts));
+
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPost("update", Name = "UpdateProduct")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<UpdateProductCommandResponse>> UpdateProduct(UpdateProductCommand request)
+        {
+            try
+            {
+                var res = await mediator.Send(request);
+
+                return Ok(res);
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e, nameof(UpdateProduct));
+
+                return BadRequest(e.Message);
             }
         }
 

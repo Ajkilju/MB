@@ -6,15 +6,13 @@ using System.Threading.Tasks;
 
 namespace mB.Db.Entities
 {
-    public class Product
+    public class Product : Entity
     {
-        public int Id { get; set; }
-
         public string Name { get; set; }
 
         public string Category { get; set; }
 
-        public DateTime Added { get; set; }
+        public decimal Price { get; set; }
         
         public string Source { get; set; }
     }
@@ -22,5 +20,6 @@ namespace mB.Db.Entities
     public static class ProductSource
     {
         public const string XmlFile = "XML file";
+        public const string CsvFile = "CSV file";
     }
 }

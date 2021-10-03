@@ -1,5 +1,7 @@
-using mB.Api.Services;
+using mB.Api.Features.Invoices.Registrations;
+using mB.Api.Features.Products.Registrations;
 using mB.Db;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -13,30 +15,39 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace mB.Api
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup()
         {
-            Configuration = configuration;
+            var builder = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddJsonFile($"settings.json", optional: true, reloadOnChange: true)
+                .AddEnvironmentVariables();
+
+            Configuration = builder.Build();
         }
 
-        public IConfiguration Configuration { get; }
+        public IConfigurationRoot Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var solutionDirInDebugMode = "../";
-            var dbPath = Path.GetFullPath($"{solutionDirInDebugMode}mB.Db/mB.db");
+            services.Configure<Paths>(options =>
+                Configuration.GetSection("Paths").Bind(options));
 
             services.AddDbContext<Context>(options =>
-                options.UseSqlite($"Data Source={dbPath}"));
+                options.UseSqlite(Configuration.GetConnectionString("Default")));
 
-            services.AddScoped<ProductService>();
-            services.AddScoped<Utils.ILogger, DbLogger>();
+            services.AddMediatR(Assembly.GetExecutingAssembly());
+
+            services.AddInvoices();
+            services.AddProducts();
+            services.AddProductsLoader();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

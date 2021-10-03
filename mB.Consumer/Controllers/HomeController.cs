@@ -12,9 +12,9 @@ namespace mB.Consumer.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ProductsClient client;
+        private readonly mBApiClient client;
 
-        public HomeController(ProductsClient client)
+        public HomeController(mBApiClient client)
         {
             this.client = client;
         }
@@ -31,10 +31,10 @@ namespace mB.Consumer.Controllers
 
             try
             {
-                var products = await client
+                var res = await client
                     .GetAllProductsAsync();
 
-                vm.Products = products.ToList();
+                vm.Products = res.Products.ToList();
             }
             catch(Exception e)
             {

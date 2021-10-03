@@ -27,7 +27,7 @@ namespace mB.Consumer
             {
                 var baseUrl = "http://localhost:37562/";
                 var httpClient = new System.Net.Http.HttpClient();
-                var client = new ProductsClient(baseUrl, httpClient);
+                var client = new mBApiClient(baseUrl, httpClient);
                 return client;
             });
 
