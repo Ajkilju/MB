@@ -41,6 +41,10 @@ namespace mB.Loader.Tests.Utils
             var fileName = $"Products_TST_{guid}.csv";
             var fullFileName = $"{dirPath}\\{fileName}";
 
+            var dir = new DirectoryInfo(dirPath);
+            if (!dir.Exists)
+                dir.Create();
+
             using (var fs = File.Create(fullFileName))
             {
                 var content = csv.ToString();
